@@ -1,13 +1,10 @@
 /// <reference path="../../API.ts" />
 
-/// <reference path="Iterator.ts" />
-
 namespace std.base
 {
 	export abstract class ReverseIterator<T, 
-			Source extends Container<T, Source, Base, This>, 
-			Base extends Iterator<T, Source, Base, This>, 
-			This extends ReverseIterator<T, Source, Base, This>>
+			Base extends Readonly<IBidirectionalIterator<T, Base>>, 
+			This extends ReverseIterator<T, Base, This>>
 		implements Readonly<IBidirectionalIterator<T, This>>
 	{
 		/**
@@ -18,7 +15,7 @@ namespace std.base
 		/* ---------------------------------------------------------
 			CONSTRUCTORS
 		--------------------------------------------------------- */
-		protected constructor(base: Base)
+		public constructor(base: Base)
 		{
 			this.base_ = base.prev();
 		}
@@ -32,11 +29,6 @@ namespace std.base
 		/* ---------------------------------------------------------
 			ACCESSORS
 		--------------------------------------------------------- */
-		public source(): Source
-		{
-			return this.base_.source();
-		}
-
 		public base(): Base
 		{
 			return this.base_.next();

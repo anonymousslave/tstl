@@ -1,12 +1,10 @@
 /// <reference path="../../API.ts" />
 
-/// <reference path="Iterator.ts" />
 /// <reference path="ReverseIterator.ts" />
 
 namespace std.base
 {
 	export class ArrayIterator<T, Source extends ArrayContainer<T, Source>>
-		extends Iterator<T, Source, ArrayIterator<T, Source>, ArrayReverseIterator<T, Source>>
 		implements IRandomAccessIterator<T, ArrayIterator<T, Source>>
 	{
 		/**
@@ -24,8 +22,6 @@ namespace std.base
 		--------------------------------------------------------- */
 		public constructor(source: Source, index: number)
 		{
-			super();
-
 			this.source_ = source;
 			this.index_ = index;
 		}
@@ -84,7 +80,7 @@ namespace std.base
 	 * @hidden
 	 */
 	export class ArrayReverseIterator<T, Source extends ArrayContainer<T, Source>>
-		extends ReverseIterator<T, Source, ArrayIterator<T, Source>, ArrayReverseIterator<T, Source>>
+		extends ReverseIterator<T, ArrayIterator<T, Source>, ArrayReverseIterator<T, Source>>
 		implements IRandomAccessIterator<T, ArrayReverseIterator<T, Source>>
 	{
 		/* ---------------------------------------------------------

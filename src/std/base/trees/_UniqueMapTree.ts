@@ -7,16 +7,16 @@ namespace std.base
 	/**
 	 * @hidden
 	 */
-	export class _UniqueMapTree<Key, T, Source extends UniqueMap<Key, T, Source>>
-		extends _MapTree<Key, T, Source>
+	export class _UniqueMapTree<Key, T>
+		extends _MapTree<Key, T>
 	{
 		/* ---------------------------------------------------------
 			CONSTRUCTOR
 		--------------------------------------------------------- */
-		public constructor(source: Source, comp: (x: Key, y: Key) => boolean)
+		public constructor(end: MapIterator<Key, T>, comp: (x: Key, y: Key) => boolean)
 		{
-			super(source, comp,
-				function (x: MapIterator<Key, T, Source>, y: MapIterator<Key, T, Source>): boolean
+			super(end, comp,
+				function (x: MapIterator<Key, T>, y: MapIterator<Key, T>): boolean
 				{
 					return comp(x.first, y.first);
 				}
@@ -26,7 +26,7 @@ namespace std.base
 		/* ---------------------------------------------------------
 			FINDERS
 		--------------------------------------------------------- */
-		public nearest_by_key(key: Key): _XTreeNode<MapIterator<Key, T, Source>>
+		public nearest_by_key(key: Key): _XTreeNode<MapIterator<Key, T>>
 		{
 			// NEED NOT TO ITERATE
 			if (this.root_ == null)
@@ -35,12 +35,12 @@ namespace std.base
 			//----
 			// ITERATE
 			//----
-			let ret: _XTreeNode<MapIterator<Key, T, Source>> = this.root_;
+			let ret: _XTreeNode<MapIterator<Key, T>> = this.root_;
 			
 			while (true) // UNTIL MEET THE MATCHED VALUE OR FINAL BRANCH
 			{
-				let it: MapIterator<Key, T, Source> = ret.value;
-				let my_node: _XTreeNode<MapIterator<Key, T, Source>> = null;
+				let it: MapIterator<Key, T> = ret.value;
+				let my_node: _XTreeNode<MapIterator<Key, T>> = null;
 				
 				// COMPARE
 				if (this.key_comp()(key, it.first))
@@ -59,15 +59,15 @@ namespace std.base
 			return ret; // DIFFERENT NODE
 		}
 
-		public upper_bound(key: Key): MapIterator<Key, T, Source>
+		public upper_bound(key: Key): MapIterator<Key, T>
 		{
 			// FIND MATCHED NODE
-			let node: _XTreeNode<MapIterator<Key, T, Source>> = this.nearest_by_key(key);
+			let node: _XTreeNode<MapIterator<Key, T>> = this.nearest_by_key(key);
 			if (node == null)
-				return this.source().end() as MapIterator<Key, T, Source>;
+				return this.end_;
 
 			// MUST BE it.first > key
-			let it: MapIterator<Key, T, Source> = node.value;
+			let it: MapIterator<Key, T> = node.value;
 			if (this.key_comp()(key, it.first))
 				return it;
 			else

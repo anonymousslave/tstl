@@ -5,7 +5,7 @@
 namespace std.base
 {
 	export abstract class UniqueSet<T, Source extends UniqueSet<T, Source>>
-		extends SetContainer<T, Source>
+		extends SetContainer<T, Pair<SetIterator<T>, boolean>, Source>
 	{
 		/* ---------------------------------------------------------
 			ACCESSOR
@@ -16,25 +16,12 @@ namespace std.base
 		}
 
 		/* ---------------------------------------------------------
-			INSERT
-		--------------------------------------------------------- */
-		public insert(val: T): Pair<SetIterator<T, Source>, boolean>;
-		public insert(hint: SetIterator<T, Source>, val: T): SetIterator<T, Source>;
-		public insert<U extends T, InputIterator extends Readonly<IForwardIterator<U, InputIterator>>>
-			(first: InputIterator, last: InputIterator): void;
-
-		public insert(...args: any[]): any
-		{
-			return super.insert.apply(this, args);
-		}
-
-		/* ---------------------------------------------------------
 			ERASE
 		--------------------------------------------------------- */
 		public extract(val: T): T;
-		public extract(it: SetIterator<T, Source>): SetIterator<T, Source>;
+		public extract(it: SetIterator<T>): SetIterator<T>;
 
-		public extract(param: T | SetIterator<T, Source>): any
+		public extract(param: T | SetIterator<T>): any
 		{
 			if (param instanceof SetIterator)
 				return this._Extract_by_iterator(param);
@@ -58,7 +45,7 @@ namespace std.base
 		/**
 		 * @hidden
 		 */
-		private _Extract_by_iterator(it: SetIterator<T, Source>): SetIterator<T, Source>
+		private _Extract_by_iterator(it: SetIterator<T>): SetIterator<T>
 		{
 			if (it.equals(this.end()) == true || this.has(it.value) == false)
 				return this.end();

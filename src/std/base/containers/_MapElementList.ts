@@ -7,55 +7,40 @@ namespace std.base
 	/**
 	 * @hidden
 	 */
-	export class _MapElementList<Key, T, Source extends MapContainer<Key, T, Source>> 
+	export class _MapElementList<Key, T> 
 		extends ListContainer<Entry<Key, T>, 
-			Source, 
-			MapIterator<Key, T, Source>,
-			MapReverseIterator<Key, T, Source>>
+			_MapElementList<Key, T>,
+			MapIterator<Key, T>,
+			MapReverseIterator<Key, T>>
 	{
 		/**
 		 * @hidden
 		 */
-		private associative_: Source;
-
-		/**
-		 * @hidden
-		 */
-		private rend_: MapReverseIterator<Key, T, Source>;
+		private rend_: MapReverseIterator<Key, T>;
 
 		/* ---------------------------------------------------------
 			CONSTRUCTORS
 		--------------------------------------------------------- */
-		public constructor(associative: Source)
+		protected _Create_iterator(prev: MapIterator<Key, T>, next: MapIterator<Key, T>, val: Entry<Key, T>): MapIterator<Key, T>
 		{
-			super();
-
-			this.associative_ = associative;
+			return new MapIterator<Key, T>(prev, next, val);
 		}
-
-		protected _Create_iterator(prev: MapIterator<Key, T, Source>, next: MapIterator<Key, T, Source>, val: Entry<Key, T>): MapIterator<Key, T, Source>
-		{
-			return new MapIterator<Key, T, Source>(this, prev, next, val);
-		}
-		protected _Set_begin(it: MapIterator<Key, T, Source>): void
+		
+		protected _Set_begin(it: MapIterator<Key, T>): void
 		{
 			super._Set_begin(it);
-			this.rend_ = new MapReverseIterator<Key, T, Source>(it);
+			this.rend_ = new MapReverseIterator<Key, T>(it);
 		}
 
 		/* ---------------------------------------------------------
 			ACCESSORS
 		--------------------------------------------------------- */
-		public associative(): Source
+		public rbegin(): MapReverseIterator<Key, T>
 		{
-			return this.associative_;
+			return new MapReverseIterator<Key, T>(this.end());
 		}
 
-		public rbegin(): MapReverseIterator<Key, T, Source>
-		{
-			return new MapReverseIterator<Key, T, Source>(this.end());
-		}
-		public rend(): MapReverseIterator<Key, T, Source>
+		public rend(): MapReverseIterator<Key, T>
 		{
 			return this.rend_;
 		}

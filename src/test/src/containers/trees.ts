@@ -37,7 +37,7 @@ namespace test
 		}
 	}
 
-	function _Test_tree_set(set: std.base.ISetContainer<number>): void
+	function _Test_tree_set(set: std.base.SetContainer<number, any, any>): void
 	{
 		for (let i: number = 0; i < 1000; ++i)
 			(set as std.TreeSet<number>).insert(Math.floor(Math.random() * 100));
@@ -64,7 +64,7 @@ namespace test
 		}
 	}
 	
-	function _Test_tree_map(map: std.base.IMapContainer<number, number>): void
+	function _Test_tree_map(map: std.base.MapContainer<number, number, any, any>): void
 	{
 		for (let i: number = 0; i < 1000; ++i)
 			(map as std.TreeMap<number, number>).emplace(Math.floor(Math.random() * 100), 0);

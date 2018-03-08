@@ -4,36 +4,13 @@
 
 namespace std.base
 {
-	export class SetIterator<T, Source extends SetContainer<T, Source>>
-		extends ListIterator<T, 
-			Source, 
-			SetIterator<T, Source>, 
-			SetReverseIterator<T, Source>>
+	export class SetIterator<T>
+		extends ListIterator<T, SetIterator<T>>
 	{
-		/**
-		 * @hidden
-		 */
-		private source_: _SetElementList<T, Source>;
-
-		/* ---------------------------------------------------------
-			CONSTRUCTORS
-		--------------------------------------------------------- */
-		public constructor(source: _SetElementList<T, Source>, prev: SetIterator<T, Source>, next: SetIterator<T, Source>, val: T)
-		{
-			super(prev, next, val);
-
-			this.source_ = source;
-		}
-
 		/* ---------------------------------------------------------
 			ACCESSORS
 		--------------------------------------------------------- */
-		public source(): Source
-		{
-			return this.source_.associative();
-		}
-		
-		public less(obj: SetIterator<T, Source>): boolean
+		public less(obj: SetIterator<T>): boolean
 		{
 			return less(this.value, obj.value);
 		}
@@ -47,26 +24,17 @@ namespace std.base
 
 namespace std.base
 {
-	export class SetReverseIterator<T, Source extends SetContainer<T, Source>>
+	export class SetReverseIterator<T>
 		extends ReverseIterator<T, 
-			Source, 
-			SetIterator<T, Source>, 
-			SetReverseIterator<T, Source>>
+			SetIterator<T>, 
+			SetReverseIterator<T>>
 	{
-		/* ---------------------------------------------------------
-			CONSTRUCTORS
-		--------------------------------------------------------- */
-		public constructor(base: SetIterator<T, Source>)
-		{
-			super(base);
-		}
-
 		/**
 		 * @hidden
 		 */
-		protected _Create_neighbor(base: SetIterator<T, Source>): SetReverseIterator<T, Source>
+		protected _Create_neighbor(base: SetIterator<T>): SetReverseIterator<T>
 		{
-			return new SetReverseIterator<T, Source>(base);
+			return new SetReverseIterator(base);
 		}
 	}
 }

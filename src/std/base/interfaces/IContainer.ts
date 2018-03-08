@@ -1,35 +1,18 @@
 namespace std.base
 {
-	/** 
-	 * @hidden
-	 */
-	export interface IContainer<T> 
-		extends Container<T, 
-			IContainer<T>,
-			IIterator<T>,
-			IReverseIterator<T>>
+	export interface IContainer<T, 
+			Iterator extends Readonly<IForwardIterator<T, Iterator>>>
 	{
+		begin(): Iterator;
+		end(): Iterator;
 	}
 
-	/** 
-	 * @hidden
-	 */
-	export interface IIterator<T> 
-		extends Iterator<T, 
-			IContainer<T>, 
-			IIterator<T>,
-			IReverseIterator<T>> 
+	export interface IReverseContainer<T,
+			IteratorT extends Readonly<IBidirectionalIterator<T, IteratorT>>,
+			ReverseIteratorT extends ReverseIterator<T, IteratorT, ReverseIteratorT>>
+		extends IContainer<T, IteratorT>
 	{
-	}
-
-	/** 
-	 * @hidden
-	 */
-	export interface IReverseIterator<T>
-		extends ReverseIterator<T, 
-			IContainer<T>,
-			IIterator<T>,
-			IReverseIterator<T>>
-	{
+		rbegin(): ReverseIteratorT;
+		rend(): ReverseIteratorT;
 	}
 }

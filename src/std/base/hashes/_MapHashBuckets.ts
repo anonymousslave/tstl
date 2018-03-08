@@ -7,10 +7,10 @@ namespace std.base
 	/**
 	 * @hidden
 	 */
-	export class _MapHashBuckets<Key, T, Source extends MapContainer<Key, T, Source>>
-		extends _HashBuckets<MapIterator<Key, T, Source>>
+	export class _MapHashBuckets<Key, T>
+		extends _HashBuckets<MapIterator<Key, T>>
 	{
-		private source_: IHashMap<Key, T, Source>;
+		private end_: MapIterator<Key, T>;
 
 		private hash_function_: (key: Key) => number;
 		private key_eq_: (x: Key, y: Key) => boolean;
@@ -18,11 +18,11 @@ namespace std.base
 		/* ---------------------------------------------------------
 			CONSTRUCTORS & ACCESSORS
 		--------------------------------------------------------- */
-        public constructor(source: IHashMap<Key, T, Source>, hash: (key: Key) => number, pred: (x: Key, y: Key) => boolean)
+        public constructor(end: MapIterator<Key, T>, hash: (key: Key) => number, pred: (x: Key, y: Key) => boolean)
 		{
 			super();
 
-			this.source_ = source;
+			this.end_ = end;
 			this.hash_function_ = hash;
 			this.key_eq_ = pred;
 		}
@@ -39,7 +39,7 @@ namespace std.base
 		/* ---------------------------------------------------------
 			FINDERS
 		--------------------------------------------------------- */
-		public find(key: Key): MapIterator<Key, T, Source>
+		public find(key: Key): MapIterator<Key, T>
 		{
 			let index = this.hash_function_(key) % this.size();
 			let bucket = this.at(index);
@@ -48,10 +48,10 @@ namespace std.base
 				if (this.key_eq_(it.first, key))
 					return it;
 
-			return this.source_.end();
+			return this.end_;
 		}
 
-		public hash_index(it: MapIterator<Key, T, Source>): number
+		public hash_index(it: MapIterator<Key, T>): number
 		{
 			return this.hash_function_(it.first) % this.size();
 		}

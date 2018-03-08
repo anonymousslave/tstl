@@ -7,16 +7,16 @@ namespace std.base
 	/**
 	 * @hidden
 	 */
-	export class _MultiSetTree<T, Source extends MultiSet<T, Source>>
-		extends _SetTree<T, Source>
+	export class _MultiSetTree<T>
+		extends _SetTree<T>
 	{
 		/* ---------------------------------------------------------
 			CONSTRUCTOR
 		--------------------------------------------------------- */
-		public constructor(source: Source, comp: (x: T, y: T) => boolean)
+		public constructor(end: SetIterator<T>, comp: (x: T, y: T) => boolean)
 		{
-			super(source, comp, 
-				function (x: SetIterator<T, Source>, y: SetIterator<T, Source>): boolean
+			super(end, comp, 
+				function (x: SetIterator<T>, y: SetIterator<T>): boolean
 				{
 					let ret: boolean = comp(x.value, y.value);
 					if (!ret && !comp(y.value, x.value))
@@ -27,7 +27,7 @@ namespace std.base
 			);
 		}
 
-		public insert(val: SetIterator<T, Source>): void
+		public insert(val: SetIterator<T>): void
 		{
 			// ISSUE UID BEFORE INSERTION
 			(val as any).__get_m_iUID();
@@ -41,8 +41,8 @@ namespace std.base
 		private _Nearest_by_key
 			(
 				val: T, 
-				equal_mover: (node: _XTreeNode<SetIterator<T, Source>>) => _XTreeNode<SetIterator<T, Source>>
-			): _XTreeNode<SetIterator<T, Source>>
+				equal_mover: (node: _XTreeNode<SetIterator<T>>) => _XTreeNode<SetIterator<T>>
+			): _XTreeNode<SetIterator<T>>
 		{
 			// NEED NOT TO ITERATE
 			if (this.root_ == null)
@@ -51,13 +51,13 @@ namespace std.base
 			//----
 			// ITERATE
 			//----
-			let ret: _XTreeNode<SetIterator<T, Source>> = this.root_;
-			let matched: _XTreeNode<SetIterator<T, Source>> = null;
+			let ret: _XTreeNode<SetIterator<T>> = this.root_;
+			let matched: _XTreeNode<SetIterator<T>> = null;
 
 			while (true)
 			{
-				let it: SetIterator<T, Source> = ret.value;
-				let my_node: _XTreeNode<SetIterator<T, Source>> = null;
+				let it: SetIterator<T> = ret.value;
+				let my_node: _XTreeNode<SetIterator<T>> = null;
 
 				// COMPARE
 				if (this.key_comp()(val, it.value))
@@ -82,7 +82,7 @@ namespace std.base
 			return (matched != null) ? matched : ret;
 		}
 
-		public nearest_by_key(val: T): _XTreeNode<SetIterator<T, Source>>
+		public nearest_by_key(val: T): _XTreeNode<SetIterator<T>>
 		{
 			return this._Nearest_by_key(val, function (node)
 			{
@@ -90,19 +90,19 @@ namespace std.base
 			});
 		}
 
-		public upper_bound(val: T): SetIterator<T, Source>
+		public upper_bound(val: T): SetIterator<T>
 		{
 			// FIND MATCHED NODE
-			let node: _XTreeNode<SetIterator<T, Source>> = this._Nearest_by_key(val, 
+			let node: _XTreeNode<SetIterator<T>> = this._Nearest_by_key(val, 
 				function (node)
 				{
 					return node.right;
 				});
 			if (node == null) // NOTHING
-				return this.source().end() as SetIterator<T, Source>;
+				return this.end_;
 
 			// MUST BE it.first > key
-			let it: SetIterator<T, Source> = node.value;
+			let it: SetIterator<T> = node.value;
 			
 			if (this.key_comp()(val, it.value))
 				return it;

@@ -152,7 +152,7 @@ namespace test
 			d: std.Deque<boolean>, 
 			l: std.List<boolean>, 
 			vb: std.VectorBoolean, 
-			func: (container: std.base.ILinearContainer<boolean>) => void
+			func: (container: /*std.base.Container<boolean>*/any) => void
 		): void
 	{
 		func(v);

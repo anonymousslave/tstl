@@ -5,9 +5,9 @@
 namespace std.base
 {
 	export abstract class ListContainer<T, 
-			SourceT extends Container<T, SourceT, IteratorT, ReverseIteratorT>,
-			IteratorT extends ListIterator<T, SourceT, IteratorT, ReverseIteratorT>,
-			ReverseIteratorT extends ReverseIterator<T, SourceT, IteratorT, ReverseIteratorT>>
+			SourceT extends ListContainer<T, SourceT, IteratorT, ReverseIteratorT>,
+			IteratorT extends ListIterator<T, IteratorT>,
+			ReverseIteratorT extends ReverseIterator<T, IteratorT, ReverseIteratorT>>
 		extends Container<T, SourceT, IteratorT, ReverseIteratorT>
 	{
 		/**
@@ -28,7 +28,7 @@ namespace std.base
 		/* ---------------------------------------------------------
 			CONSTRUCTORS
 		--------------------------------------------------------- */
-		protected constructor()
+		public constructor()
 		{
 			super();
 
@@ -163,7 +163,7 @@ namespace std.base
 		public insert(pos: IteratorT, ...args: any[]): IteratorT
 		{
 			// VALIDATION
-			if (pos.source() != this.end_.source())
+			if (pos["gid_"] != this.end_["gid_"])
 				throw new InvalidArgument("Parametric iterator is not this container's own.");
 
 			// BRANCHES
@@ -242,7 +242,7 @@ namespace std.base
 		protected _Erase_by_range(first: IteratorT, last: IteratorT): IteratorT
 		{
 			// VALIDATION
-			if (first.source() != this.end_.source() || last.source() != this.end_.source())
+			if (first["gid_"] != this.end_["gid_"] || last["gid_"] != this.end_["gid_"])
 				throw new InvalidArgument("Parametric iterator is not this container's own.");
 
 			// FIND PREV AND NEXT
@@ -265,9 +265,9 @@ namespace std.base
 		--------------------------------------------------------- */
 		public swap(obj: SourceT): void
 		{
-			[this.begin_, (obj as any).begin_] = [(obj as any).begin_, this.begin_];
-			[this.end_, (obj as any).end_] = [(obj as any).end_, this.end_];
-			[this.size_, (obj as any).size_] = [(obj as any).size_, this.size_];
+			[this.begin_, obj.begin_] = [obj.begin_, this.begin_];
+			[this.end_, obj.end_] = [obj.end_, this.end_];
+			[this.size_, obj.size_] = [obj.size_, this.size_];
 		}
 	}
 }

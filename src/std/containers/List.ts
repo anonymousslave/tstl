@@ -11,11 +11,6 @@ namespace std
 		/**
 		 * @hidden
 		 */
-		private ptr_: IPointer<List<T>>;
-
-		/**
-		 * @hidden
-		 */
 		private rend_: List.ReverseIterator<T>;
 
 		/* =========================================================
@@ -38,10 +33,6 @@ namespace std
 			//----
 			// INHERITS
 			super();
-
-			// DECLARE SOURCE POINTER
-			this.ptr_ = {value: this};
-			this["end_"]["source_ptr_"] = this.ptr_;
 
 			//----
 			// BRANCHES
@@ -74,7 +65,7 @@ namespace std
 		 */
 		protected _Create_iterator(prev: List.Iterator<T>, next: List.Iterator<T>, val: T): List.Iterator<T>
 		{
-			return new List.Iterator<T>(this.ptr_, prev as List.Iterator<T>, next as List.Iterator<T>, val);
+			return new List.Iterator(prev, next, val);
 		}
 
 		/**
@@ -274,49 +265,18 @@ namespace std
 			this.end()["prev_"] = prev_of_end;
 			this.end()["next_"] = begin;
 		}
-		
-		public swap(obj: List<T>): void
-		{
-			// CHANGE CONTENTS
-			super.swap(obj);
-
-			// CHANGE ITERATORS' SOURCES
-			[this.ptr_, obj.ptr_] = [obj.ptr_, this.ptr_];
-			[this.ptr_.value, obj.ptr_.value] = [obj.ptr_.value, this.ptr_.value];
-		}
 	}
 }
 
 namespace std.List
 {
 	export class Iterator<T>
-		extends base.ListIterator<T, List<T>, Iterator<T>, ReverseIterator<T>>
+		extends base.ListIterator<T, Iterator<T>>
 	{
-		/**
-		 * @hidden
-		 */
-		private source_ptr_: IPointer<List<T>>;
-
-		/* ---------------------------------------------------------------
-			CONSTRUCTORS
-		--------------------------------------------------------------- */
-		/**
-		 * @hidden
-		 */
-		public constructor(sourcePtr: IPointer<List<T>>, prev: Iterator<T>, next: Iterator<T>, value: T)
-		{
-			super(prev, next, value);
-			this.source_ptr_ = sourcePtr;
-		}
 
 		/* ---------------------------------------------------------------
 			ACCESSORS
 		--------------------------------------------------------------- */
-		public source(): List<T>
-		{
-			return this.source_ptr_.value;
-		}
-
 		public get value(): T
 		{
 			return this["value_"];
@@ -337,16 +297,8 @@ namespace std.List
 	}
 
 	export class ReverseIterator<T>
-		extends base.ReverseIterator<T, List<T>, Iterator<T>, ReverseIterator<T>>
+		extends base.ReverseIterator<T, Iterator<T>, ReverseIterator<T>>
 	{
-		/* ---------------------------------------------------------------
-			CONSTRUCTORS
-		--------------------------------------------------------------- */
-		public constructor(base: Iterator<T>)
-		{
-			super(base);
-		}
-
 		/**
 		 * @hidden
 		 */
@@ -355,9 +307,6 @@ namespace std.List
 			return new ReverseIterator<T>(base);
 		}
 
-		/* ---------------------------------------------------------
-			ACCESSORS
-		--------------------------------------------------------- */
 		public get value(): T
 		{
 			return this.base_.value;

@@ -7,12 +7,12 @@ namespace std
 {
 	export class TreeMap<Key, T>
 		extends base.UniqueMap<Key, T, TreeMap<Key, T>>
-		implements base.ITreeMap<Key, T, TreeMap<Key, T>>
+		implements base.ITreeMap<Key, T>
 	{
 		/**
 		 * @hidden
 		 */
-		private tree_: base._UniqueMapTree<Key, T, TreeMap<Key, T>>;
+		private tree_: base._UniqueMapTree<Key, T>;
 
 		/* =========================================================
 			CONSTRUCTORS & SEMI-CONSTRUCTORS
@@ -98,7 +98,7 @@ namespace std
 			// DO PROCESS
 			//----
 			// CONSTRUCT TREE
-			this.tree_ = new base._UniqueMapTree<Key, T, TreeMap<Key, T>>(this, comp);
+			this.tree_ = new base._UniqueMapTree<Key, T>(this.end(), comp);
 			
 			// ACT POST-PROCESS
 			if (post_process != null)
@@ -121,7 +121,6 @@ namespace std
 			super.swap(obj);
 
 			// SWAP RB-TREE
-			[this.tree_["source_"], obj.tree_["source_"]] = [obj.tree_["source_"], this.tree_["source_"]];
 			[this.tree_, obj.tree_] = [obj.tree_, this.tree_];
 		}
 
@@ -270,8 +269,8 @@ namespace std.TreeMap
 	// PASCAL NOTATION
 	//----
 	// HEAD
-	export type Iterator<Key, T> = base.MapIterator<Key, T, TreeMap<Key, T>>;
-	export type ReverseIterator<Key, T> = base.MapReverseIterator<Key, T, TreeMap<Key, T>>;
+	export type Iterator<Key, T> = base.MapIterator<Key, T>;
+	export type ReverseIterator<Key, T> = base.MapReverseIterator<Key, T>;
 
 	// BODY
 	export var Iterator = base.MapIterator;

@@ -7,12 +7,12 @@ namespace std
 {
 	export class TreeMultiSet<T>
 		extends base.MultiSet<T, TreeMultiSet<T>>
-		implements base.ITreeSet<T, TreeMultiSet<T>>
+		implements base.ITreeSet<T>
 	{
 		/**
 		 * @hidden
 		 */
-		private tree_: base._MultiSetTree<T, TreeMultiSet<T>>;
+		private tree_: base._MultiSetTree<T>;
 
 		/* =========================================================
 			CONSTRUCTORS & SEMI-CONSTRUCTORS
@@ -94,7 +94,7 @@ namespace std
 			// DO PROCESS
 			//----
 			// CONSTRUCT TREE
-			this.tree_ = new base._MultiSetTree<T, TreeMultiSet<T>>(this, comp);
+			this.tree_ = new base._MultiSetTree(this.end(), comp);
 			
 			// ACT POST-PROCESS
 			if (post_process != null)
@@ -117,7 +117,6 @@ namespace std
 			super.swap(obj);
 
 			// SWAP RB-TREE
-			[this.tree_["source_"], obj.tree_["source_"]] = [obj.tree_["source_"], this.tree_["source_"]];
 			[this.tree_, obj.tree_] = [obj.tree_, this.tree_];
 		}
 
@@ -265,8 +264,8 @@ namespace std.TreeMultiSet
 	// PASCAL NOTATION
 	//----
 	// HEAD
-	export type Iterator<T> = base.SetIterator<T, TreeMultiSet<T>>;
-	export type ReverseIterator<T> = base.SetReverseIterator<T, TreeMultiSet<T>>;
+	export type Iterator<T> = base.SetIterator<T>;
+	export type ReverseIterator<T> = base.SetReverseIterator<T>;
 
 	// BODY
 	export var Iterator = base.ArrayIterator;

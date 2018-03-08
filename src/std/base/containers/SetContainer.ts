@@ -4,16 +4,16 @@
 
 namespace std.base
 {
-	export abstract class SetContainer<T, Source extends SetContainer<T, Source>>
+	export abstract class SetContainer<T, InsertRet, Source extends SetContainer<T, InsertRet, Source>>
 		extends Container<T, 
 			Source, 
-			SetIterator<T, Source>, 
-			SetReverseIterator<T, Source>>
+			SetIterator<T>, 
+			SetReverseIterator<T>>
 	{
 		/**
 		 * @hidden
 		 */
-		private data_: _SetElementList<T, Source>;
+		private data_: _SetElementList<T>;
 		
 		/* ---------------------------------------------------------
 			CONSTURCTORS
@@ -22,7 +22,7 @@ namespace std.base
 		{
 			super();
 
-			this.data_ = new _SetElementList<T, Source>(this as any);
+			this.data_ = new _SetElementList();
 		}
 
 		public assign<U extends T, InputIterator extends Readonly<IForwardIterator<U, InputIterator>>>
@@ -46,24 +46,24 @@ namespace std.base
 		============================================================
 			ITERATOR
 		--------------------------------------------------------- */
-		public abstract find(val: T): SetIterator<T, Source>;
+		public abstract find(val: T): SetIterator<T>;
 
-		public begin(): SetIterator<T, Source>
+		public begin(): SetIterator<T>
 		{
 			return this.data_.begin();
 		}
 
-		public end(): SetIterator<T, Source>
+		public end(): SetIterator<T>
 		{
 			return this.data_.end();
 		}
 
-		public rbegin(): SetReverseIterator<T, Source>
+		public rbegin(): SetReverseIterator<T>
 		{
 			return this.data_.rbegin();
 		}
 
-		public rend(): SetReverseIterator<T, Source>
+		public rend(): SetReverseIterator<T>
 		{
 			return this.data_.rend();
 		}
@@ -115,7 +115,8 @@ namespace std.base
 			return this.size();
 		}
 		
-		public insert(hint: SetIterator<T, Source>, val: T): SetIterator<T, Source>;
+		public insert(val: T): InsertRet;
+		public insert(hint: SetIterator<T>, val: T): SetIterator<T>;
 		public insert<U extends T, InputIterator extends Readonly<IForwardIterator<U, InputIterator>>>
 			(begin: InputIterator, end: InputIterator): void;
 
@@ -142,12 +143,12 @@ namespace std.base
 		/**
 		 * @hidden
 		 */
-		protected abstract _Insert_by_val(val: T): any;
+		protected abstract _Insert_by_val(val: T): InsertRet;
 		
 		/**
 		 * @hidden
 		 */
-		protected abstract _Insert_by_hint(hint: SetIterator<T, Source>, val: T): SetIterator<T, Source>;
+		protected abstract _Insert_by_hint(hint: SetIterator<T>, val: T): SetIterator<T>;
 		
 		/**
 		 * @hidden
@@ -159,12 +160,12 @@ namespace std.base
 			ERASE
 		--------------------------------------------------------- */
 		public erase(val: T): number;
-		public erase(it: SetIterator<T, Source>): SetIterator<T, Source>;
-		public erase(begin: SetIterator<T, Source>, end: SetIterator<T, Source>): SetIterator<T, Source>;
+		public erase(it: SetIterator<T>): SetIterator<T>;
+		public erase(begin: SetIterator<T>, end: SetIterator<T>): SetIterator<T>;
 
 		public erase(...args: any[]): any
 		{
-			if (args.length == 1 && !(args[0] instanceof SetIterator && (args[0] as SetIterator<T, Source>).source() as any == this))
+			if (args.length == 1 && !(args[0] instanceof SetIterator && (args[0] as SetIterator<T>)["gid_"] == this.end()["gid_"]))
 				return this._Erase_by_val(args[0]);
 			else if (args.length == 1)
 				return this._Erase_by_range(args[0]);
@@ -190,7 +191,7 @@ namespace std.base
 		/**
 		 * @hidden
 		 */
-		private _Erase_by_range(first: SetIterator<T, Source>, last: SetIterator<T, Source> = first.next()): SetIterator<T, Source>
+		private _Erase_by_range(first: SetIterator<T>, last: SetIterator<T> = first.next()): SetIterator<T>
 		{
 			// ERASE
 			let it = this.data_.erase(first, last);
@@ -210,10 +211,7 @@ namespace std.base
 		public swap(obj: Source): void
 		{
 			// CHANGE CONTENTS
-			[this.data_ as any, obj.data_] = [obj.data_, this.data_];
-
-			// CHANGE ITERATORS' SOURCES
-			[this.data_["associative_"], obj.data_["associative_"]] = [obj.data_["associative_"], this.data_["associative_"]];
+			[this.data_, obj.data_] = [obj.data_, this.data_];
 		}
 
 		public abstract merge(source: Source): void;
@@ -224,11 +222,11 @@ namespace std.base
 		/**
 		 * @hidden
 		 */
-		protected abstract _Handle_insert(first: SetIterator<T, Source>, last: SetIterator<T, Source>): void;
+		protected abstract _Handle_insert(first: SetIterator<T>, last: SetIterator<T>): void;
 
 		/**
 		 * @hidden
 		 */
-		protected abstract _Handle_erase(first: SetIterator<T, Source>, last: SetIterator<T, Source>): void;
+		protected abstract _Handle_erase(first: SetIterator<T>, last: SetIterator<T>): void;
 	}
 }

@@ -7,12 +7,12 @@ namespace std
 {
 	export class TreeMultiMap<Key, T>
 		extends base.MultiMap<Key, T, TreeMultiMap<Key, T>>
-		implements base.ITreeMap<Key, T, TreeMultiMap<Key, T>>
+		implements base.ITreeMap<Key, T>
 	{
 		/**
 		 * @hidden
 		 */
-		private tree_: base._MultiMapTree<Key, T, TreeMultiMap<Key, T>>;
+		private tree_: base._MultiMapTree<Key, T>;
 
 		/* =========================================================
 			CONSTRUCTORS & SEMI-CONSTRUCTORS
@@ -99,7 +99,7 @@ namespace std
 			// DO PROCESS
 			//----
 			// CONSTRUCT TREE
-			this.tree_ = new base._MultiMapTree<Key, T, TreeMultiMap<Key, T>>(this, comp);
+			this.tree_ = new base._MultiMapTree(this.end(), comp);
 			
 			// ACT POST-PROCESS
 			if (post_process != null)
@@ -122,7 +122,6 @@ namespace std
 			super.swap(obj);
 
 			// SWAP RB-TREE
-			[this.tree_["source_"], obj.tree_["source_"]] = [obj.tree_["source_"], this.tree_["source_"]];
 			[this.tree_, obj.tree_] = [obj.tree_, this.tree_];
 		}
 
@@ -270,8 +269,8 @@ namespace std.TreeMultiMap
 	// PASCAL NOTATION
 	//----
 	// HEAD
-	export type Iterator<Key, T> = base.MapIterator<Key, T, TreeMultiMap<Key, T>>;
-	export type ReverseIterator<Key, T> = base.MapReverseIterator<Key, T, TreeMultiMap<Key, T>>;
+	export type Iterator<Key, T> = base.MapIterator<Key, T>;
+	export type ReverseIterator<Key, T> = base.MapReverseIterator<Key, T>;
 
 	// BODY
 	export var Iterator = base.MapIterator;

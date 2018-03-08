@@ -7,12 +7,12 @@ namespace std
 {
 	export class HashMultiSet<T>
 		extends base.MultiSet<T, HashMultiSet<T>>
-		implements base.IHashSet<T, HashMultiSet<T>>
+		implements base.IHashSet<T>
 	{
 		/**
 		 * @hidden
 		 */
-		private buckets_: base._SetHashBuckets<T, HashMultiSet<T>>;
+		private buckets_: base._SetHashBuckets<T>;
 
 		/* =========================================================
 			CONSTRUCTORS & SEMI-CONSTRUCTORS
@@ -104,7 +104,7 @@ namespace std
 			// DO PROCESS
 			//----
 			// CONSTRUCT BUCKET
-			this.buckets_ = new base._SetHashBuckets(this, hash_function, key_eq);
+			this.buckets_ = new base._SetHashBuckets(this.end(), hash_function, key_eq);
 
 			// ACT POST-PROCESS
 			if (post_process != null)
@@ -127,7 +127,6 @@ namespace std
 			super.swap(obj);
 
 			// SWAP BUCKETS
-			[this.buckets_["source_"], obj.buckets_["source_"]] = [obj.buckets_["source_"], this.buckets_["source_"]];
 			[this.buckets_, obj.buckets_] = [obj.buckets_, this.buckets_];
 		}
 
@@ -184,7 +183,7 @@ namespace std
 			if (index == null)
 				return super.rbegin();
 			else
-				return new base.SetReverseIterator<T, HashMultiSet<T>>(this.end(index));
+				return new base.SetReverseIterator(this.end(index));
 		}
 
 		public rend(): HashMultiSet.ReverseIterator<T>;
@@ -194,7 +193,7 @@ namespace std
 			if (index == null)
 				return super.rend();
 			else
-				return new base.SetReverseIterator<T, HashMultiSet<T>>(this.begin(index));
+				return new base.SetReverseIterator(this.begin(index));
 		}
 
 		/* ---------------------------------------------------------
@@ -323,8 +322,8 @@ namespace std.HashMultiSet
 	// PASCAL NOTATION
 	//----
 	// HEAD
-	export type Iterator<T> = base.SetIterator<T, HashMultiSet<T>>;
-	export type ReverseIterator<T> = base.SetReverseIterator<T, HashMultiSet<T>>;
+	export type Iterator<T> = base.SetIterator<T>;
+	export type ReverseIterator<T> = base.SetReverseIterator<T>;
 
 	// BODY
 	export var Iterator = base.ArrayIterator;

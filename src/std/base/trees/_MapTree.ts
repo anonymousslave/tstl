@@ -7,27 +7,27 @@ namespace std.base
 	/**
 	 * @hidden
 	 */
-	export abstract class _MapTree<Key, T, Source extends MapContainer<Key, T, Source>>
-		extends _XTree<MapIterator<Key, T, Source>>
+	export abstract class _MapTree<Key, T>
+		extends _XTree<MapIterator<Key, T>>
 	{
-		private source_: Source;
+		protected readonly end_: MapIterator<Key, T>;
 
-		private key_compare_: (x: Key, y: Key) => boolean;
-		private key_eq_: (x: Key, y: Key) => boolean;
-		private value_compare_: (x: IPair<Key, T>, y: IPair<Key, T>) => boolean;
+		private readonly key_compare_: (x: Key, y: Key) => boolean;
+		private readonly key_eq_: (x: Key, y: Key) => boolean;
+		private readonly value_compare_: (x: IPair<Key, T>, y: IPair<Key, T>) => boolean;
 		
 		/* ---------------------------------------------------------
 			CONSTRUCTOR
 		--------------------------------------------------------- */
         public constructor
 			(
-				source: Source, 
+				end: MapIterator<Key, T>, 
 				comp: (x: Key, y: Key) => boolean,
-				it_comp: (x: MapIterator<Key, T, Source>, y: MapIterator<Key, T, Source>) => boolean
+				it_comp: (x: MapIterator<Key, T>, y: MapIterator<Key, T>) => boolean
 			)
 		{
 			super(it_comp);
-			this.source_ = source;
+			this.end_ = end;
 
 			this.key_compare_ = comp;
 			this.key_eq_ = function (x: Key, y: Key): boolean
@@ -43,7 +43,7 @@ namespace std.base
 		/* ---------------------------------------------------------
 			FINDERS
 		--------------------------------------------------------- */
-		public get_by_key(key: Key): _XTreeNode<MapIterator<Key, T, Source>>
+		public get_by_key(key: Key): _XTreeNode<MapIterator<Key, T>>
 		{
 			let ret = this.nearest_by_key(key);
 			if (ret == null || !this.key_eq_(key, ret.value.first))
@@ -51,23 +51,23 @@ namespace std.base
 			else
 				return ret;
 		}
-		public abstract nearest_by_key(key: Key): _XTreeNode<MapIterator<Key, T, Source>>;
+		public abstract nearest_by_key(key: Key): _XTreeNode<MapIterator<Key, T>>;
 
-		public lower_bound(key: Key): MapIterator<Key, T, Source>
+		public lower_bound(key: Key): MapIterator<Key, T>
 		{
-			let node: _XTreeNode<MapIterator<Key, T, Source>> = this.nearest_by_key(key);
+			let node: _XTreeNode<MapIterator<Key, T>> = this.nearest_by_key(key);
 
 			if (node == null)
-				return this.source().end() as MapIterator<Key, T, Source>;
+				return this.end_;
 			else if (this.key_comp()(node.value.first, key)) // it < key
 				return node.value.next();
 			else
 				return node.value;
 		}
 
-		public abstract upper_bound(key: Key): MapIterator<Key, T, Source>;
+		public abstract upper_bound(key: Key): MapIterator<Key, T>;
 
-		public equal_range(key: Key): Pair<MapIterator<Key, T, Source>, MapIterator<Key, T, Source>>
+		public equal_range(key: Key): Pair<MapIterator<Key, T>, MapIterator<Key, T>>
 		{
 			return make_pair(this.lower_bound(key), this.upper_bound(key));
 		}
@@ -75,11 +75,6 @@ namespace std.base
 		/* ---------------------------------------------------------
 			ACCECSSORS
 		--------------------------------------------------------- */
-		public source(): Source
-		{
-			return this.source_;
-		}
-
 		public key_comp(): (x: Key, y: Key) => boolean
 		{
 			return this.key_compare_;

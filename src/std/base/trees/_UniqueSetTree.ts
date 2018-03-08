@@ -7,16 +7,16 @@ namespace std.base
 	/**
 	 * @hidden
 	 */
-	export class _UniqueSetTree<T, Source extends UniqueSet<T, Source>>
-		extends _SetTree<T, Source>
+	export class _UniqueSetTree<T>
+		extends _SetTree<T>
 	{
 		/* ---------------------------------------------------------
 			CONSTRUCTOR
 		--------------------------------------------------------- */
-		public constructor(source: Source, comp: (x: T, y: T) => boolean)
+		public constructor(end: SetIterator<T>, comp: (x: T, y: T) => boolean)
 		{
-			super(source, comp, 
-				function (x: SetIterator<T, Source>, y: SetIterator<T, Source>): boolean
+			super(end, comp, 
+				function (x: SetIterator<T>, y: SetIterator<T>): boolean
 				{
 					return comp(x.value, y.value);
 				}
@@ -26,7 +26,7 @@ namespace std.base
 		/* ---------------------------------------------------------
 			FINDERS
 		--------------------------------------------------------- */
-		public nearest_by_key(val: T): _XTreeNode<SetIterator<T, Source>>
+		public nearest_by_key(val: T): _XTreeNode<SetIterator<T>>
 		{
 			// NEED NOT TO ITERATE
 			if (this.root_ == null)
@@ -35,12 +35,12 @@ namespace std.base
 			//----
 			// ITERATE
 			//----
-			let ret: _XTreeNode<SetIterator<T, Source>> = this.root_;
+			let ret: _XTreeNode<SetIterator<T>> = this.root_;
 
 			while (true) // UNTIL MEET THE MATCHED VALUE OR FINAL BRANCH
 			{
-				let it: SetIterator<T, Source> = ret.value;
-				let my_node: _XTreeNode<SetIterator<T, Source>> = null;
+				let it: SetIterator<T> = ret.value;
+				let my_node: _XTreeNode<SetIterator<T>> = null;
 
 				// COMPARE
 				if (this.key_comp()(val, it.value))
@@ -59,19 +59,19 @@ namespace std.base
 			return ret; // DIFFERENT NODE
 		}
 
-		public upper_bound(val: T): SetIterator<T, Source>
+		public upper_bound(val: T): SetIterator<T>
 		{
 			//--------
 			// FIND MATCHED NODE
 			//--------
-			let node: _XTreeNode<SetIterator<T, Source>> = this.nearest_by_key(val);
+			let node: _XTreeNode<SetIterator<T>> = this.nearest_by_key(val);
 			if (node == null)
-				return this.source().end() as SetIterator<T, Source>;
+				return this.end_;
 
 			//--------
 			// RETURN BRANCH
 			//--------
-			let it: SetIterator<T, Source> = node.value;
+			let it: SetIterator<T> = node.value;
 
 			// MUST BE it.value > key
 			if (this.key_comp()(val, it.value))

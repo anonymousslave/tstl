@@ -3,14 +3,13 @@
 	/** 
 	 * @hidden
 	 */
-    export interface ITreeMap<Key, T, Source extends MapContainer<Key, T, Source>>
-        extends MapContainer<Key, T, Source>
+    export interface ITreeMap<Key, T>
 	{
 		key_comp(): (x: Key, y: Key) => boolean;
 		value_comp(): (x: IPair<Key, T>, y: IPair<Key, T>) => boolean;
 
-		lower_bound(key: Key): MapIterator<Key, T, Source>;
-		upper_bound(key: Key): MapIterator<Key, T, Source>;
-		equal_range(key: Key): Pair<MapIterator<Key, T, Source>, MapIterator<Key, T, Source>>;
+		lower_bound(key: Key): MapIterator<Key, T>;
+		upper_bound(key: Key): MapIterator<Key, T>;
+		equal_range(key: Key): Pair<MapIterator<Key, T>, MapIterator<Key, T>>;
 	}
 }

@@ -5,7 +5,7 @@
 namespace std.base
 {
 	export abstract class UniqueMap<Key, T, Source extends UniqueMap<Key, T, Source>>
-		extends MapContainer<Key, T, Source>
+		extends MapContainer<Key, T, Pair<MapIterator<Key, T>, boolean>, Source>
 	{
 		/* ---------------------------------------------------------
 			ACCESSORS
@@ -32,29 +32,8 @@ namespace std.base
 		/* ---------------------------------------------------------
 			INSERT
 		--------------------------------------------------------- */
-		public emplace(key: Key, value: T): Pair<MapIterator<Key, T, Source>, boolean>;
-		public emplace(pair: IPair<Key, T>): Pair<MapIterator<Key, T, Source>, boolean>;
-
-		public emplace(...args: any[]): Pair<MapIterator<Key, T, Source>, boolean>
-		{
-			if (args.length == 1)
-				return this._Emplace(args[0].first, args[0].second);
-			else
-				return this._Emplace(args[0], args[1]);
-		}
-
-		public insert(pair: IPair<Key, T>): Pair<MapIterator<Key, T, Source>, boolean>;
-		public insert(hint: MapIterator<Key, T, Source>, pair: IPair<Key, T>): MapIterator<Key, T, Source>;
-		public insert<L extends Key, U extends T, InputIterator extends Readonly<IForwardIterator<IPair<L, U>, InputIterator>>>
-			(first: InputIterator, last: InputIterator): void
-
-		public insert(...args: any[]): any
-		{
-			return super.insert.apply(this, args);
-		}
-
-		public insert_or_assign(key: Key, value: T): Pair<MapIterator<Key, T, Source>, boolean>;
-		public insert_or_assign(hint: MapIterator<Key, T, Source>, key: Key, value: T): MapIterator<Key, T, Source>;
+		public insert_or_assign(key: Key, value: T): Pair<MapIterator<Key, T>, boolean>;
+		public insert_or_assign(hint: MapIterator<Key, T>, key: Key, value: T): MapIterator<Key, T>;
 
 		public insert_or_assign(...args: any[]): any
 		{
@@ -72,7 +51,7 @@ namespace std.base
 		/**
 		 * @hidden
 		 */
-		private _Insert_or_assign_with_key_value(key: Key, value: T): Pair<MapIterator<Key, T, Source>, boolean>
+		private _Insert_or_assign_with_key_value(key: Key, value: T): Pair<MapIterator<Key, T>, boolean>
 		{
 			let it = this.find(key);
 
@@ -88,7 +67,7 @@ namespace std.base
 		/**
 		 * @hidden
 		 */
-		private _Insert_or_assign_with_hint(hint: MapIterator<Key, T, Source>, key: Key, value: T): MapIterator<Key, T, Source>
+		private _Insert_or_assign_with_hint(hint: MapIterator<Key, T>, key: Key, value: T): MapIterator<Key, T>
 		{
 			let it = this._Emplace_hint(hint, key, value);
 			if (it.second != value)
@@ -101,9 +80,9 @@ namespace std.base
 			ERASE
 		--------------------------------------------------------- */
 		public extract(key: Key): Entry<Key, T>;
-		public extract(it: MapIterator<Key, T, Source>): MapIterator<Key, T, Source>;
+		public extract(it: MapIterator<Key, T>): MapIterator<Key, T>;
 
-		public extract(param: Key | MapIterator<Key, T, Source>): any
+		public extract(param: Key | MapIterator<Key, T>): any
 		{
 			if (param instanceof MapIterator)
 				return this._Extract_by_iterator(param);
@@ -129,7 +108,7 @@ namespace std.base
 		/**
 		 * @hidden
 		 */
-		private _Extract_by_iterator(it: MapIterator<Key, T, Source>): MapIterator<Key, T, Source>
+		private _Extract_by_iterator(it: MapIterator<Key, T>): MapIterator<Key, T>
 		{
 			if (it.equals(this.end()) == true)
 				return this.end();

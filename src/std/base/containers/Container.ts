@@ -4,8 +4,8 @@ namespace std.base
 {
 	export abstract class Container<T, 
 			SourceT extends Container<T, SourceT, IteratorT, ReverseIteratorT>,
-			IteratorT extends Iterator<T, SourceT, IteratorT, ReverseIteratorT>,
-			ReverseIteratorT extends ReverseIterator<T, SourceT, IteratorT, ReverseIteratorT>>
+			IteratorT extends Readonly<IBidirectionalIterator<T, IteratorT>>,
+			ReverseIteratorT extends ReverseIterator<T, IteratorT, ReverseIteratorT>>
 		implements Iterable<T>
 	{
 		/* =========================================================

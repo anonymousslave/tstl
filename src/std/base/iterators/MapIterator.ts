@@ -4,40 +4,12 @@
 
 namespace std.base
 {
-	export class MapIterator<Key, T, Source extends MapContainer<Key, T, Source>>
-		extends ListIterator<Entry<Key, T>, 
-			Source, 
-			MapIterator<Key, T, Source>, 
-			MapReverseIterator<Key, T, Source>>
+	export class MapIterator<Key, T> 
+		extends ListIterator<Entry<Key, T>, MapIterator<Key, T>>
 	{
-		/**
-		 * @hidden
-		 */
-		private source_: _MapElementList<Key, T, Source>;
-
-		/* ---------------------------------------------------------
-			CONSTRUCTORS
-		--------------------------------------------------------- */
-		/**
-		 * @hidden
-		 */
-		public constructor(associative: _MapElementList<Key, T, Source>, prev: MapIterator<Key, T, Source>, next: MapIterator<Key, T, Source>, val: Pair<Key, T>)
-		{
-			super(prev, next, val);
-			this.source_ = associative;
-		}
-
 		/* ---------------------------------------------------------
 			ACCESSORS
 		--------------------------------------------------------- */
-		/**
-		 * @hidden
-		 */
-		public source(): Source
-		{
-			return this.source_.associative();
-		}
-
 		public get first(): Key
 		{
 			return this.value.first;
@@ -56,7 +28,7 @@ namespace std.base
 		/* ---------------------------------------------------------
 			COMPARISONS
 		--------------------------------------------------------- */
-		public less(obj: MapIterator<Key, T, Source>): boolean
+		public less(obj: MapIterator<Key, T>): boolean
 		{
 			return less(this.first, obj.first);
 		}
@@ -70,24 +42,18 @@ namespace std.base
 
 namespace std.base
 {
-	export class MapReverseIterator<Key, T, Source extends MapContainer<Key, T, Source>>
-		extends ReverseIterator<Entry<Key, T>, 
-			Source, 
-			MapIterator<Key, T, Source>, 
-			MapReverseIterator<Key, T, Source>>
+	export class MapReverseIterator<Key, T>
+		extends ReverseIterator<Entry<Key, T>,
+			MapIterator<Key, T>, 
+			MapReverseIterator<Key, T>>
 	{
 		/* ---------------------------------------------------------
 			CONSTRUCTORS
 		--------------------------------------------------------- */
-		public constructor(base: MapIterator<Key, T, Source>)
-		{
-			super(base);
-		}
-
 		/**
 		 * @hidden
 		 */
-		protected _Create_neighbor(base: MapIterator<Key, T, Source>): MapReverseIterator<Key, T, Source>
+		protected _Create_neighbor(base: MapIterator<Key, T>): MapReverseIterator<Key, T>
 		{
 			return new MapReverseIterator(base);
 		}

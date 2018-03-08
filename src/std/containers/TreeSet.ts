@@ -7,12 +7,12 @@ namespace std
 {
 	export class TreeSet<T>
 		extends base.UniqueSet<T, TreeSet<T>>
-		implements base.ITreeSet<T, TreeSet<T>>
+		implements base.ITreeSet<T>
 	{
 		/**
 		 * @hidden
 		 */
-		private tree_: base._UniqueSetTree<T, TreeSet<T>>;
+		private tree_: base._UniqueSetTree<T>;
 
 		/* =========================================================
 			CONSTRUCTORS & SEMI-CONSTRUCTORS
@@ -94,7 +94,7 @@ namespace std
 			// DO PROCESS
 			//----
 			// CONSTRUCT TREE
-			this.tree_ = new base._UniqueSetTree<T, TreeSet<T>>(this, comp);
+			this.tree_ = new base._UniqueSetTree(this.end(), comp);
 			
 			// ACT POST-PROCESS
 			if (post_process != null)
@@ -117,7 +117,6 @@ namespace std
 			super.swap(obj);
 
 			// SWAP RB-TREE
-			[this.tree_["source_"], obj.tree_["source_"]] = [obj.tree_["source_"], this.tree_["source_"]];
 			[this.tree_, obj.tree_] = [obj.tree_, this.tree_];
 		}
 		
@@ -260,12 +259,12 @@ namespace std.TreeSet
 	// PASCAL NOTATION
 	//----
 	// HEAD
-	export type Iterator<T> = base.SetIterator<T, TreeSet<T>>;
-	export type ReverseIterator<T> = base.SetReverseIterator<T, TreeSet<T>>;
+	export type Iterator<T> = base.SetIterator<T>;
+	export type ReverseIterator<T> = base.SetReverseIterator<T>;
 
 	// BODY
-	export var Iterator = base.ArrayIterator;
-	export var ReverseIterator = base.ArrayReverseIterator;
+	export const Iterator = base.ArrayIterator;
+	export const ReverseIterator = base.ArrayReverseIterator;
 
 	//----
 	// SNAKE NOTATION
@@ -275,6 +274,6 @@ namespace std.TreeSet
 	export type reverse_iterator<T> = ReverseIterator<T>;
 
 	// BODY
-	export var iterator = Iterator;
-	export var reverse_iterator = ReverseIterator;
+	export const iterator = Iterator;
+	export const reverse_iterator = ReverseIterator;
 }

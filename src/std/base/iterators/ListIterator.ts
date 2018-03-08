@@ -1,16 +1,18 @@
 /// <reference path="../../API.ts" />
 
-/// <reference path="Iterator.ts" />
-/// <reference path="ReverseIterator.ts" />
-
 namespace std.base
 {
-	export abstract class ListIterator<T, 
-			SourceT extends Container<T, SourceT, IteratorT, ReverseIteratorT>,
-			IteratorT extends ListIterator<T, SourceT, IteratorT, ReverseIteratorT>,
-			ReverseIteratorT extends ReverseIterator<T, SourceT, IteratorT, ReverseIteratorT>>
-		extends Iterator<T, SourceT, IteratorT, ReverseIteratorT>
+	export abstract class ListIterator<T,
+			IteratorT extends ListIterator<T, IteratorT>>
+		implements Readonly<IBidirectionalIterator<T, IteratorT>>
 	{
+		private static SEQUENCE: number = 0;
+
+		/**
+		 * @hidden
+		 */
+		private gid_: number;
+
 		/**
 		 * @hidden
 		 */
@@ -29,9 +31,14 @@ namespace std.base
 		/**
 		 * @hidden
 		 */
-		protected constructor(prev: IteratorT, next: IteratorT, value: T)
+		public constructor(prev: IteratorT, next: IteratorT, value: T)
 		{
-			super();
+			if (prev)
+				this.gid_ = prev.gid_;
+			else if (next)
+				this.gid_ = next.gid_;
+			else
+				this.gid_ = ++ListIterator.SEQUENCE;
 
 			this.prev_ = prev;
 			this.next_ = next;

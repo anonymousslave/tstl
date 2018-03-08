@@ -7,10 +7,10 @@ namespace std.base
 	/**
 	 * @hidden
 	 */
-	export class _SetHashBuckets<T, Source extends SetContainer<T, Source>>
-		extends _HashBuckets<SetIterator<T, Source>>
+	export class _SetHashBuckets<T>
+		extends _HashBuckets<SetIterator<T>>
 	{
-		private source_: IHashSet<T, Source>;
+		private end_: SetIterator<T>;
 
 		private hash_function_: (val: T) => number;
 		private key_eq_: (x: T, y: T) => boolean;
@@ -18,11 +18,11 @@ namespace std.base
 		/* ---------------------------------------------------------
 			CONSTRUCTORS & ACCESSORS
 		--------------------------------------------------------- */
-        public constructor(source: IHashSet<T, Source>, hash: (val: T) => number, pred: (x: T, y: T) => boolean)
+        public constructor(end: SetIterator<T>, hash: (val: T) => number, pred: (x: T, y: T) => boolean)
 		{
 			super();
 
-			this.source_ = source;
+			this.end_ = end;
 			this.hash_function_ = hash;
 			this.key_eq_ = pred;
 		}
@@ -39,7 +39,7 @@ namespace std.base
 		/* ---------------------------------------------------------
 			FINDERS
 		--------------------------------------------------------- */
-		public find(val: T): SetIterator<T, Source>
+		public find(val: T): SetIterator<T>
 		{
 			let index = this.hash_function_(val) % this.size();
 			let bucket = this.at(index);
@@ -48,10 +48,10 @@ namespace std.base
 				if (this.key_eq_(it.value, val))
 					return it;
 
-			return this.source_.end();
+			return this.end_;
 		}
 
-		public hash_index(it: SetIterator<T, Source>): number
+		public hash_index(it: SetIterator<T>): number
 		{
 			return this.hash_function_(it.value) % this.size();
 		}

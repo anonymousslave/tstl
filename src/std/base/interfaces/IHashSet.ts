@@ -3,10 +3,9 @@
 	/** 
 	 * @hidden
 	 */
-    export interface IHashSet<T, Source extends SetContainer<T, Source>>
-        extends SetContainer<T, Source>
+    export interface IHashSet<T>
 	{
-		hash_function(): (key:T) => number;
+		hash_function(): (key: T) => number;
 		key_eq(): (x: T, y: T) => boolean;
 
 		bucket(key: T): number;

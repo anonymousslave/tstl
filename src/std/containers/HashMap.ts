@@ -7,12 +7,12 @@ namespace std
 {
 	export class HashMap<Key, T>
 		extends base.UniqueMap<Key, T, HashMap<Key, T>>
-		implements base.IHashMap<Key, T, HashMap<Key, T>>
+		implements base.IHashMap<Key>
 	{
 		/**
 		 * @hidden
 		 */
-		private buckets_: base._MapHashBuckets<Key, T, HashMap<Key, T>>;
+		private buckets_: base._MapHashBuckets<Key, T>;
 	
 		/* =========================================================
 			CONSTRUCTORS & SEMI-CONSTRUCTORS
@@ -104,7 +104,7 @@ namespace std
 			// DO PROCESS
 			//----
 			// CONSTRUCT BUCKET
-			this.buckets_ = new base._MapHashBuckets(this, hash_function, key_eq);
+			this.buckets_ = new base._MapHashBuckets(this.end(), hash_function, key_eq);
 
 			// ACT POST-PROCESS
 			if (post_process != null)
@@ -127,7 +127,6 @@ namespace std
 			super.swap(obj);
 
 			// SWAP BUCKETS
-			[this.buckets_["source_"], obj.buckets_["source_"]] = [obj.buckets_["source_"], this.buckets_["source_"]];
 			[this.buckets_, obj.buckets_] = [obj.buckets_, this.buckets_];
 		}
 
@@ -170,7 +169,7 @@ namespace std
 			if (index == null)
 				return super.rbegin();
 			else
-				return new base.MapReverseIterator<Key, T, HashMap<Key, T>>(this.end(index));
+				return new base.MapReverseIterator(this.end(index));
 		}
 
 		public rend(): HashMap.ReverseIterator<Key, T>;
@@ -180,7 +179,7 @@ namespace std
 			if (index == null)
 				return super.rend();
 			else
-				return new base.MapReverseIterator<Key, T, HashMap<Key, T>>(this.begin(index));
+				return new base.MapReverseIterator(this.begin(index));
 		}
 
 		/* ---------------------------------------------------------
@@ -339,8 +338,8 @@ namespace std.HashMap
 	// PASCAL NOTATION
 	//----
 	// HEAD
-	export type Iterator<Key, T> = base.MapIterator<Key, T, HashMap<Key, T>>;
-	export type ReverseIterator<Key, T> = base.MapReverseIterator<Key, T, HashMap<Key, T>>;
+	export type Iterator<Key, T> = base.MapIterator<Key, T>;
+	export type ReverseIterator<Key, T> = base.MapReverseIterator<Key, T>;
 
 	// BODY
 	export var Iterator = base.MapIterator;
